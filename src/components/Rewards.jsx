@@ -3,7 +3,7 @@ import { ethers } from "ethers";
 import { fitnessRewardsABI } from "../FitnessRewardsABI"; // Import ABI
 import Navbar from "./NavBar"; 
 
-const contractAddress = "0x326c2BE8BBd1907113657528C8bC584e659C3c95"; // Replace with your contract address
+const contractAddress = "0x803464443150655a3b040052Da0dEc0dD0d3E8B9"; // Replace with your contract address
 
 const isValidEthereumAddress = (address) => {
   return (
@@ -27,27 +27,19 @@ const App = () => {
     const init = async () => {
       if (window.ethereum) {
         try {
-          const web3Provider = new ethers.providers.Web3Provider(
-            window.ethereum
-          );
-          const contract = new ethers.Contract(
-            contractAddress,
-            fitnessRewardsABI,
-            web3Provider
-          );
+          const web3Provider = new ethers.providers.Web3Provider(window.ethereum);
+          const contract = new ethers.Contract(contractAddress, fitnessRewardsABI, web3Provider);
 
           setProvider(web3Provider);
           setContract(contract);
         } catch (error) {
           console.error("Error initializing provider:", error);
-          alert(
-            "Error initializing Ethereum provider. Please check your MetaMask setup."
-          );
+          alert("Error initializing Ethereum provider. Please check your MetaMask setup.");
         }
       } else {
         alert("Please install MetaMask!");
       }
-    };
+    }
     init();
   }, []);
 
@@ -56,15 +48,13 @@ const App = () => {
       try {
         // Check if selected address is a valid Ethereum address
         if (isValidEthereumAddress(selectedAddress)) {
-          const userRewards = await contract.rewards(selectedAddress);
+          const userRewards = await contract.checkRewardPoints(selectedAddress); // Use checkRewardPoints
           setRewards(userRewards.toString());
-
+  
           // Check if the selected address is the owner
-          const owner = await contract.owner();
+          const owner = await contract.admin(); // Use admin
           setIsOwner(selectedAddress.toLowerCase() === owner.toLowerCase());
-          setShowAssignRewards(
-            selectedAddress.toLowerCase() === owner.toLowerCase()
-          );
+          setShowAssignRewards(selectedAddress.toLowerCase() === owner.toLowerCase());
         } else {
           alert("Invalid Ethereum address");
         }
@@ -73,6 +63,7 @@ const App = () => {
       }
     }
   };
+  
 
   const assignRewards = async () => {
     if (contract && isOwner && isValidEthereumAddress(userAddress)) {
@@ -80,7 +71,7 @@ const App = () => {
         const signer = provider.getSigner();
         console.log("Signer address:", await signer.getAddress()); // Debugging line
         const contractWithSigner = contract.connect(signer);
-        const tx = await contractWithSigner.assignRewards(userAddress, amount);
+        const tx = await contractWithSigner.addRewardPoints(userAddress, amount); // Use addRewardPoints
         console.log("Transaction:", tx); // Debugging line
         await tx.wait();
         alert(`Rewards assigned to ${userAddress}`);
@@ -98,9 +89,9 @@ const App = () => {
       }
     }
   };
+  
 
   return (
- 
     <>
       <Navbar />
       <div id="reward" className="px-5">
@@ -125,14 +116,14 @@ const App = () => {
                 Show Rewards
               </button>
             </label>
-            <p>Rewards:{rewards}</p>
+            <p>Rewards: {rewards}</p>
             <p className="text-xs text-red-400 py-2">
-              Note:Rewards are assinged by your trainer
+              Note: Rewards are assigned by your trainer
             </p>
             {showAssignRewards && (
               <div className="py-5">
                 <h3>Assign Rewards</h3>
-                <div className="flex sm:flex-row  gap-2 py-2">
+                <div className="flex sm:flex-row gap-2 py-2">
                   <input
                     className="p-2 border rounded-lg"
                     type="text"
