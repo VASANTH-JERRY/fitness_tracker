@@ -27,9 +27,13 @@ const App = () => {
     const init = async () => {
       if (window.ethereum) {
         try {
+          // Request account access
+          await window.ethereum.request({ method: 'eth_requestAccounts' });
+  
           const web3Provider = new ethers.providers.Web3Provider(window.ethereum);
-          const contract = new ethers.Contract(contractAddress, fitnessRewardsABI, web3Provider);
-
+          const signer = web3Provider.getSigner();
+          const contract = new ethers.Contract(contractAddress, fitnessRewardsABI, signer);
+  
           setProvider(web3Provider);
           setContract(contract);
         } catch (error) {
@@ -39,10 +43,10 @@ const App = () => {
       } else {
         alert("Please install MetaMask!");
       }
-    }
+    };
     init();
   }, []);
-
+  
   const showRewards = async () => {
     if (contract && selectedAddress) {
       try {
