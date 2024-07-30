@@ -97,58 +97,75 @@ const App = () => {
 
   return (
     <>
-      <Navbar />
-      <div id="reward" className="px-5">
-        <div className="flex items-center justify-center min-h-screen">
-          <div className="border shadow-lg rounded-lg p-5">
-            <h1 className="text-center">Fitness Rewards</h1>
-            <h2 className="text-sm py-2">
-              Enter Metamask address to view your Fitness Rewards
-            </h2>
-            <label className="flex py-2 items-center gap-2">
+      {/* <Navbar /> */}
+      <div id="reward" className="">
+        <div className="flex items-center justify-center  min-h-screen bg-blue-600">
+          <div className="border bg-slate-200 bg-opacity-15 backdrop-filter backdrop-blur-md shadow-lg rounded-lg p-5">
+            <h1 className="text-center text-xl text-slate-50 font-medium">Fitness Rewards</h1>
+            <h2 className="text-md font-normal py-2 text-md font-normal text-white">
+            Wallet Address
+                      </h2>
+            <label className="flex  items-center gap-2">
               <input
                 placeholder="Enter address"
                 value={selectedAddress}
                 onChange={(e) => setSelectedAddress(e.target.value)}
                 type="text"
-                className="border rounded-lg p-2"
+                className="border w-full rounded-lg p-2 hover:outline-2"
               />
+              </label>
+              <div className=" flex justify-center items-center w-full py-4">
               <button
                 onClick={showRewards}
-                className="text-[14px] hover:text-orange-400"
+                className=" px-4 py-2 bg-slate-700 text-white rounded-md text-[14px] hover:bg-blue-700 "
               >
                 Show Rewards
               </button>
-            </label>
-            <p>Rewards: {rewards}</p>
-            <p className="text-xs text-red-400 py-2">
+              </div>
+              <div className="flex items-center ">
+                <p className="mr-2 text-slate-50">Rewards: </p>
+                <span className=" rounded-lg font-medium text-slate-50">{rewards} </span>
+                <span className=" ml-[2px] text-sm text-slate-50">points</span>
+              </div>
+            <p className="text-sm text-yellow-500 py-2">
               Note: Rewards are assigned by your trainer
             </p>
+            <hr></hr>
             {showAssignRewards && (
               <div className="py-5">
-                <h3>Assign Rewards</h3>
-                <div className="flex sm:flex-row gap-2 py-2">
-                  <input
-                    className="p-2 border rounded-lg"
+                <h3 className="text-slate-50 text-xl font-medium text-center">Assign Rewards</h3>
+                <div className="flex flex-col gap-y-2  py-2">
+                  <div>
+                    <p className="text-md font-normal py-2 text-md font-normal text-white">Receiver Wallet Address</p>
+                    <input
+                    className="p-2 border rounded-lg w-full"
                     type="text"
                     value={userAddress}
                     onChange={(e) => setUserAddress(e.target.value)}
                     placeholder="User Address"
-                  />
+                    />
+                  </div>
+                  <div >
+                  <p className="text-md font-normal py-2 text-md font-normal text-white">Points</p>
+
                   <input
                     type="number"
                     value={amount}
-                    className="border rounded-lg p-2"
+                    className="border rounded-lg p-2 w-full"
                     onChange={(e) => setAmount(e.target.value)}
                     placeholder="Amount to assign"
                   />
+                  </div>
                 </div>
+                <div className="flex justify-center py-2">
+
                 <button
-                  className="flex items-center border p-2 rounded-lg hover:text-orange-400"
+                  className=" p-2 bg-slate-700 text-white text-[14px]  rounded-lg hover:bg-blue-700"
                   onClick={assignRewards}
                 >
                   Assign Rewards
                 </button>
+                </div>
               </div>
             )}
           </div>
